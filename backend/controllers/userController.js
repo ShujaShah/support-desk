@@ -1,71 +1,43 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
-const User = require("../models/userModel");
+const User = require("../models/entities/userModel");
 const { generateToken } = require("../config/userToken");
+const { registerUser, loginUser } = require("../models/usecases/userUc");
 
 // @desc        Register a new user
 // @route       /api/users/
 // @access      Public
-const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
 
-  //Validation
-  if (!name || !email || !password) {
-    res.status(400);
-    throw new Error("Please include all fields");
+const registerUserController = async (req, res) => {
+  try {
+    let newUser = await registerUser(req, res);
+    return newUser;
+    if (newUser) {
+      return await res.status(200).json({ statusCode: "200", newUser });
+    } else {
+      return await res.status(404).json({ statusCode: "404", newUser: {} });
+    }
+  } catch (error) {
+    console.error(error.message);
   }
-
-  //Find if user already exists?
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    res.status(400);
-    throw new Error("User already Exists!!");
-  }
-
-  //hash the password
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
-  //Create User
-  const user = await User.create({
-    name,
-    email,
-    password: hashedPassword,
-  });
-
-  if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(400);
-    throw new Error("Invalid user data");
-  }
-});
+};
 
 // @desc        Login user
 // @route       /api/users/login
 // @access      Public
-const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-
-  //Check user and password if it matches?
-  if (user && (await bcrypt.compare(password, user.password))) {
-    res.status(200).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(401);
-    throw new Error("Invalid Email or Password");
-  }
-});
+const loginUserController = async(req, res)=>{
+    try{
+        let userLogin = await loginUser(req, res);
+        return userLogin;
+        if (userLogin) {
+            return await res.status(200).json({ statusCode: "200", userLogin });
+          } else {
+            return await res.status(404).json({ statusCode: "404", userLogin: {} });
+          }
+        } catch (error) {
+          console.error(error.message);
+        }
+    }
 
 // @desc        Get current user
 // @route       /api/users/me
@@ -89,7 +61,7 @@ const getMe = asyncHandler(async (req, res) => {
 // };
 
 module.exports = {
-  registerUser,
+  registerUserController,
   loginUser,
   getMe,
 };
