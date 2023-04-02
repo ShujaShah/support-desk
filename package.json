@@ -5,12 +5,15 @@
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "nodemon": "nodemon backend/server.js"
+    "nodemon": "nodemon backend/server.js",
+    "client": "npm start --prefix front-end",
+    "dev":"concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [
     "javascript",
     "nodejs",
     "reactjs",
+    "redux",
     "express",
     "mongodb"
   ],
