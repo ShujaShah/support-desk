@@ -12,32 +12,24 @@ const registerUserController = async (req, res) => {
   try {
     let newUser = await registerUser(req, res);
     return newUser;
-    if (newUser) {
-      return await res.status(200).json({ statusCode: "200", newUser });
-    } else {
-      return await res.status(404).json({ statusCode: "404", newUser: {} });
-    }
   } catch (error) {
     console.error(error.message);
+    res.status(400).json({ error: error.message });
   }
 };
 
 // @desc        Login user
 // @route       /api/users/login
 // @access      Public
-const loginUserController = async(req, res)=>{
-    try{
-        let userLogin = await loginUser(req, res);
-        return userLogin;
-        if (userLogin) {
-            return await res.status(200).json({ statusCode: "200", userLogin });
-          } else {
-            return await res.status(404).json({ statusCode: "404", userLogin: {} });
-          }
-        } catch (error) {
-          console.error(error.message);
-        }
-    }
+const loginUserController = async (req, res) => {
+  try {
+    let userLogin = await loginUser(req, res);
+    return userLogin;
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
 
 // @desc        Get current user
 // @route       /api/users/me
@@ -62,6 +54,6 @@ const getMe = asyncHandler(async (req, res) => {
 
 module.exports = {
   registerUserController,
-  loginUser,
+  loginUserController,
   getMe,
 };
