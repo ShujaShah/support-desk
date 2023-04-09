@@ -1,27 +1,80 @@
-const asyncHandler = require('express-async-handler');
-
-const User = require('../models/entities/userModel');
-const Ticket = require('../models/entities/ticketModel');
+const asyncHandler = require("express-async-handler");
+const { getTickets, createTicket, getTicket, deleteTicket, editTicket } = require("../models/usecases/ticketUC");
 
 // @desc        Get user tickets
 // @route       GET /api/tickets/
 // @access      Private
 
-const getTickets = asyncHandler(async (req, res) => {
-    
-    res.status(200).json({message: 'getTickets'});
-  });
-  
-  
+const getTicketsController = async (req, res) => {
+  try {
+    let getAllTickets = await getTickets(req, res);
+    return getAllTickets;
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
+
 // @desc        Create New ticket
 // @route       POST /api/tickets/
 // @access      Private
 
+const createTicketController = async (req, res) => {
+  try {
+    const createSingleTicket = await createTicket(req, res);
+    return createSingleTicket;
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
 
-  const createTicket = asyncHandler(async (req, res) => {
-    
-    res.status(200).json({message: 'createTickets'});
-  });
+// @desc        Get Single ticket
+// @route       GET /api/tickets/
+// @access      Private
 
-  module.exports = {getTickets, createTicket}
-  
+const getTicketController = async (req, res) => {
+  try {
+    const getSingleTicket = await getTicket(req, res);
+    return getSingleTicket;
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// @desc        Update Single ticket
+// @route       PUT /api/tickets/
+// @access      Private
+
+const updateTicketController = async (req, res) => {
+  try {
+    const editSingleTicket = await editTicket(req, res);
+    return editSingleTicket;
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// @desc        Delete Single ticket
+// @route       DELETE /api/tickets/
+// @access      Private
+
+const deleteTicketController = async (req, res) => {
+  try {
+    const deleteSingleTicket = await deleteTicket(req, res);
+    return deleteSingleTicket;
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = {
+  getTicketsController,
+  createTicketController,
+  getTicketController,
+  deleteTicketController,
+  updateTicketController,
+};
