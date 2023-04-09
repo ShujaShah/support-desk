@@ -40,7 +40,7 @@ function NewTicket() {
   }
   return (
     <>
-      <BackButton url='/'/>
+      <BackButton url='/'/> 
       <section className="heading">
         <h1>Create New Ticket</h1>
         <p>Please Fill out the form below</p>
