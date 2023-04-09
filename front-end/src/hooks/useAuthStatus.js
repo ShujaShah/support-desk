@@ -11,7 +11,7 @@ export const useAuthStatus = () => {
     if (user) {
       setLoggedIn(true);
     } else {
-      setLoggedIn(false);
+      setLoggedIn(false);//set false
     }
 
     setCheckingStatus(false);
